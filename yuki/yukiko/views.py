@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 
+menu = ["О сайте", "Добавить статью", "Обратная связь", "Войти"]
+
 
 def index(request):
-    return render(request, 'yukiko/index.html')
+    return render(request, 'yukiko/index.html', {'menu': menu, 'title': 'Главная страница'})
 
 
 def about(request):
-    return render(request, 'yukiko/about.html')
+    return render(request, 'yukiko/about.html', {'title': 'О сайте'})
 
 
 def categories(request, yukio):
