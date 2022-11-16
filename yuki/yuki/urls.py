@@ -7,3 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('yukiko.urls'))
 ]
+
+handler404 = pageNotFound
