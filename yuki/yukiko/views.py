@@ -3,7 +3,11 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 
 
 def index(request):
-    return HttpResponse("Страница приложения")
+    return render(request, 'yukiko/index.html')
+
+
+def about(request):
+    return render(request, 'yukiko/about.html')
 
 
 def categories(request, yukio):
