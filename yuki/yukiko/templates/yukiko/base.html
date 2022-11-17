@@ -14,12 +14,12 @@
 {% block mainmenu %}
 		<div class="header">
 			<ul id="mainmenu" class="mainmenu">
-			<li class="logo"><a href="#"><div class="logo"></div></a></li>
+			<li class="logo"><a href="{% url 'home' %}"><div class="logo"></div></a></li>
 {% for m in menu %}
 	{% if not forloop.last %}
-			<li><a href="#">{{m.title}}</a></li>
+			<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
 	{% else %}
-			<li class="last"><a href="#">{{m.title}}</a></li>
+			<li class="last"><a href="{% url m.url_name %}">{{m.title}}</a></li>
 	{% endif %}
 {% endfor %}
 			</ul>
@@ -35,11 +35,14 @@
 	<ul id="leftchapters">
 		<li class="selected">Все категории</li>
 		<li><a href="#">Братаны</a></li>
-		<li><a href="#">Прогеры</a></li>
+		<li><a href="#">Наши ивенты</a></li>
 		<li><a href="#">По тачкам</a></li>
+		<li><a href="#">Дата сборов</a></li>
 		<li class="share">
 		<p>Крутое музло</p>
 		<a class="share-yt" href="https://www.youtube.com/watch?v=m4-eZIHvMPY&list=LL&index=1&ab_channel=p2900" target="_blank" rel="nofollow"></a>
+			<p>бабл гам</p>
+			<a class="share-yt" href="https://www.youtube.com/watch?v=AHa6w10DYrI&list=LL&index=16&ab_channel=Gazgolder" target="_blank" rel="nofollow"></a>
 		</li>
 	</ul>
 </td>
@@ -61,7 +64,7 @@
 <!-- Footer -->
 <tr><td valign=top>
 	<div id="footer">
-		<p>&copy; 2021 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
+		<p>&copy; 2022 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
 	</div>
 </td></tr></table>
 <!-- Конец footer'а и страницы -->
