@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from .forms import *
 from .models import *
 
 menu = [{'title': "Инфа", 'url_name': 'about'},
@@ -26,7 +27,8 @@ def about(request):
 
 
 def addpage(request):
-    return HttpResponse('Добавить статью')
+    form = AddPostForm()
+    return render(request, 'yukiko/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
 
 
 def contact(request):
