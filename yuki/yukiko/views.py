@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.views.generic import ListView
 from .forms import *
 from .models import *
 
@@ -7,19 +8,31 @@ menu = [{'title': "Инфа", 'url_name': 'about'},
         {'title': "Добавить статью", 'url_name': 'add_page'},
         {'title': "Фидбэк", 'url_name': 'contact'},
         {'title': "Вход", 'url_name': 'login'}
-        ]
+]
 
 
-def index(request):
-    posts = Yukiko.objects.all()
+class YukikoHome(ListView):
+    model = Yukiko
+    template_name = 'yukiko/index.html'
+    context_object_name = 'posts'
+    extra_context = {'title': 'Главная страница'}
 
-    context = {
-        'posts': posts,
-        'menu': menu,
-        'title': 'Главная страница',
-        'cat_selected': 0,
-    }
-    return render(request, 'yukiko/index.html', context=context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        return context
+
+
+# def index(request):
+#     posts = Yukiko.objects.all()
+#
+#     context = {
+#         'posts': posts,
+#         'menu': menu,
+#         'title': 'Главная страница',
+#         'cat_selected': 0,
+#     }
+#     return render(request, 'yukiko/index.html', context=context)
 
 
 def about(request):
