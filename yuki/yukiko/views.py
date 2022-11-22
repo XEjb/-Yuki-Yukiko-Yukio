@@ -27,7 +27,15 @@ def about(request):
 
 
 def addpage(request):
-    form = AddPostForm()
+    if request.method == 'POST':
+        form = AddPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            form.save()
+            return redirect('home')
+
+    else:
+        form = AddPostForm()
     return render(request, 'yukiko/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
 
 
