@@ -2,28 +2,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 from .models import *
-
-menu = [{'title': "Инфа", 'url_name': 'about'},
-        {'title': "Добавить статью", 'url_name': 'add_page'},
-        {'title': "Фидбэк", 'url_name': 'contact'},
-        {'title': "Вход", 'url_name': 'login'}
-        ]
+from .utils import *
 
 
-class YukikoHome(ListView):
+class YukikoHome(DataMixin, ListView):
     model = Yukiko
     template_name = 'yukiko/index.html'
     context_object_name = 'posts'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Главная страница'
-        context['cat_selected'] = 0
-        return context
+        c_def = self.get_user_context(title='Главная страница')
+        return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
         return Yukiko.objects.filter(is_published=True)
@@ -45,16 +39,17 @@ def about(request):
     return render(request, 'yukiko/about.html', {'menu': menu, 'title': 'Инфа'})
 
 
-class Addpage(CreateView):
+class Addpage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'yukiko/addpage.html'
     success_url = reverse_lazy('home')
+    login_url = reverse_lazy('home')
+    # raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Добавление статьи'
-        context['menu'] = menu
-        return context
+        c_def = self.get_user_context(title='Добавление статьи')
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 # def addpage(request):
@@ -94,7 +89,7 @@ def pageNotFound(request, exception):
 #
 #     return render(request, 'yukiko/post.html', context=context)
 
-class ShowPost(DetailView):
+class ShowPost(DataMixin, DetailView):
     model = Yukiko
     template_name = 'yukiko/post.html'
     slug_url_kwarg = 'post_slug'
@@ -102,12 +97,11 @@ class ShowPost(DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = context['post']
-        context['menu'] = menu
-        return context
+        c_def = self.get_user_context(title=context['post'])
+        return dict(list(context.items()) + list(c_def.items()))
 
 
-class YukikoCategory(ListView):
+class YukikoCategory(DataMixin, ListView):
     model = Yukiko
     template_name = 'yukiko/index.html'
     context_object_name = 'posts'
@@ -118,10 +112,9 @@ class YukikoCategory(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Категория - ' + str(context['posts'][0].cat)
-        context['menu'] = menu
-        context['cat_selected'] = context['posts'][0].cat_id
-        return context
+        c_def = self.get_user_context(title='Категория - ' + str(context['posts'][0].cat),
+                                      cat_selected=context['posts'][0].cat_id)
+        return dict(list(context.items()) + list(c_def.items()))
 
 # def show_category(request, cat_id):
 #     posts = Yukiko.objects.filter(cat_id=cat_id)
