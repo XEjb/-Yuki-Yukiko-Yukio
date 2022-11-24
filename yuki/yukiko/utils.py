@@ -10,9 +10,12 @@ menu = [{'title': "Инфа", 'url_name': 'about'},
 
 
 class DataMixin:                              #исключение дублирование кода
+    paginate_by = 3
+
     def get_user_context(self, **kwargs):
         context = kwargs
         cats = Category.objects.annotate(Count('yukiko'))
+
         user_menu = menu.copy()
         if not self.request.user.is_authenticated:
             user_menu.pop(1)
