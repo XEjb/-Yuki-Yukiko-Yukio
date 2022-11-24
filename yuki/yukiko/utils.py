@@ -5,7 +5,6 @@ from .models import *
 menu = [{'title': "Инфа", 'url_name': 'about'},
         {'title': "Добавить статью", 'url_name': 'add_page'},
         {'title': "Фидбэк", 'url_name': 'contact'},
-        {'title': "Вход", 'url_name': 'login'}
         ]
 
 
