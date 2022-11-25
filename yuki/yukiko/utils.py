@@ -5,14 +5,16 @@ from .models import *
 menu = [{'title': "Инфа", 'url_name': 'about'},
         {'title': "Добавить статью", 'url_name': 'add_page'},
         {'title': "Фидбэк", 'url_name': 'contact'},
-        {'title': "Вход", 'url_name': 'login'}
         ]
 
 
 class DataMixin:                              #исключение дублирование кода
+    paginate_by = 3
+
     def get_user_context(self, **kwargs):
         context = kwargs
         cats = Category.objects.annotate(Count('yukiko'))
+
         user_menu = menu.copy()
         if not self.request.user.is_authenticated:
             user_menu.pop(1)

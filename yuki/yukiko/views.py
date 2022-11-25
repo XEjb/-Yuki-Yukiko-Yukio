@@ -1,3 +1,6 @@
+from django.contrib.auth import logout, login
+from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse_lazy
@@ -36,7 +39,12 @@ class YukikoHome(DataMixin, ListView):
 
 
 def about(request):
-    return render(request, 'yukiko/about.html', {'menu': menu, 'title': 'Инфа'})
+    contact_list = Yukiko.objects.all()
+    paginator = Paginator(contact_list, 10)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page((page_number))
+    return render(request, 'yukiko/about.html', {'page_obj': page_obj, 'menu': menu, 'title': 'Инфа'})
 
 
 class Addpage(LoginRequiredMixin, DataMixin, CreateView):
@@ -44,6 +52,7 @@ class Addpage(LoginRequiredMixin, DataMixin, CreateView):
     template_name = 'yukiko/addpage.html'
     success_url = reverse_lazy('home')
     login_url = reverse_lazy('home')
+
     # raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -69,8 +78,8 @@ def contact(request):
     return HttpResponse("Фидбэк")
 
 
-def login(request):
-    return HttpResponse('Вход')
+# def login(request):
+#     return HttpResponse('Вход')
 
 
 def pageNotFound(request, exception):
@@ -116,6 +125,7 @@ class YukikoCategory(DataMixin, ListView):
                                       cat_selected=context['posts'][0].cat_id)
         return dict(list(context.items()) + list(c_def.items()))
 
+
 # def show_category(request, cat_id):
 #     posts = Yukiko.objects.filter(cat_id=cat_id)
 #
@@ -129,3 +139,34 @@ class YukikoCategory(DataMixin, ListView):
 #         'cat_selected': cat_id,
 #     }
 #     return render(request, 'yukiko/index.html', context=context)
+
+
+class RegisterUser(DataMixin, CreateView):
+    form_class = RegisterUserForm
+    template_name = 'yukiko/register.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Регистрация')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+
+class LoginUser(DataMixin, LoginView):
+    form_class = LoginUserForm
+    template_name = 'yukiko/login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Авторизация')
+        return dict(list(context.items()) + list(c_def.items()))
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
