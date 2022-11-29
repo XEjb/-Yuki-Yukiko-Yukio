@@ -9,7 +9,7 @@ menu = [{'title': "Инфа", 'url_name': 'about'},
 
 
 class DataMixin:                              #исключение дублирование кода
-    paginate_by = 3
+    paginate_by = 20
 
     def get_user_context(self, **kwargs):
         context = kwargs
