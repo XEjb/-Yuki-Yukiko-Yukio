@@ -20,3 +20,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Yukiko, YukikoAdmin)
 admin.site.register(Category, CategoryAdmin)
+
+admin.site.site_title = 'Админка'
+admin.site.site_header = 'Админка'
