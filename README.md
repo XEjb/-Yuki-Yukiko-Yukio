@@ -1,1 +1,1 @@
-# Django project with extensive functionality
+# Django project
